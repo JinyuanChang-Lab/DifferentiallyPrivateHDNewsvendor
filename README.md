@@ -5,7 +5,7 @@ Framework for the High-Dimensional Newsvendor`. This paper develops a privacy-pr
 ## Directory Structure
 
 ```text
-Replication Package/
+Directory
 ├── data/ 
 ├── results/ 
 ├── scripts/
