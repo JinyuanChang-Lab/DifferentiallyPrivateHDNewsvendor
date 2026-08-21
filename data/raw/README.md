@@ -3,7 +3,7 @@
 The empirical analysis uses data from the Kaggle competition
 “Corporación Favorita Grocery Sales Forecasting.”
 
-The original competition files are not redistributed in this package.
+The original competition files are not redistributed in this repository.
 
 ## Download Instructions
 
@@ -32,7 +32,7 @@ data/raw/
 ```
 
 ## Data Processing
-From the root directory of the replication package, run:
+From the root directory of the replication repository, run:
 
 ```bash
 Rscript scripts/real_data/prepare_real_data.R
