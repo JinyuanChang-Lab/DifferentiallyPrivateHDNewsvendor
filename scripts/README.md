@@ -3,7 +3,7 @@
 This directory contains the R scripts used to reproduce the simulation studies,
 real-data analysis, tables, and figures reported in the paper.
 
-All scripts should be run from the root directory of the replication package.
+All scripts should be run from the root directory of the replication repository.
 For example:
 
 ```bash
@@ -117,16 +117,16 @@ scripts. Plotting scripts in `scripts/figures/` are omitted because their runtim
  
 ### Important Note for Server Execution
 
-When using a computing server, copy the entire replication package, except for
+When using a computing server, copy the entire replication repository, except for
 the `data/` directory, to the server rather than uploading individual scripts.
 The `data/` directory is not required because the computationally intensive
 scripts run on the server do not use the empirical data. This preserves the
 remaining project directory structure and ensures that all relative paths can
 be resolved correctly. Run these scripts from the root directory of the
-replication package on the server.
+replication repository on the server.
 
 After the computations are completed, copy the generated result files back to
-the same relative locations in the local replication package. In particular,
+the same relative locations in the local replication repository. In particular,
 files generated in `results/figure_data/` on the server should be copied to
-`results/figure_data/` in the local package. The plotting scripts in
+`results/figure_data/` in the local repository. The plotting scripts in
 `scripts/figures/` can then be run locally to generate the final figures.
