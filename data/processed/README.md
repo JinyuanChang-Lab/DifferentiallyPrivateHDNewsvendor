@@ -3,7 +3,7 @@
 This directory is used to store the analysis data generated from the original
 Corporación Favorita files.
 
-Run the following command from the root directory of the replication package:
+Run the following command from the root directory of the replication repository:
 
 ```bash
 Rscript scripts/real_data/prepare_real_data.R
