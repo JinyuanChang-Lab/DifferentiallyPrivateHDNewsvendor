@@ -1,11 +1,11 @@
 # Feature-Rich, Data-Private: A Sparse Learning Framework for the High-Dimensional Newsvendor
-This directory contains the R code and supporting materials required to reproduce the numerical results reported in the paper `Feature-Rich, Data-Private: A Sparse Learning
+This repository contains the R code and supporting materials required to reproduce the numerical results reported in the paper `Feature-Rich, Data-Private: A Sparse Learning
 Framework for the High-Dimensional Newsvendor`. This paper develops a privacy-preserving learning method for high-dimensional newsvendor problems, enabling firms to extract useful demand information from large feature sets while protecting sensitive data.
 
-## Directory Structure
+## Repository Structure
 
 ```text
-Directory
+DifferentiallyPrivateHDNewsvendor
 ├── data/ 
 ├── results/ 
 ├── scripts/
@@ -47,7 +47,7 @@ provided in `scripts/README.md`.
 The empirical analysis uses data from the Kaggle competition
 “Corporación Favorita Grocery Sales Forecasting”.
 
-The original competition files are not redistributed in this package.
+The original competition files are not redistributed in this repository.
 Download and file-placement instructions are provided in `data/raw/README.md`.
  
 
@@ -73,7 +73,7 @@ Rscript scripts/real_data/supp_NN_real_data.R
 
 The following table lists the output locations and scripts used to reproduce
 the results reported in the paper. All scripts should be run from the root
-directory of the replication package. An em dash indicates that no separate
+directory of the replication repository. An em dash indicates that no separate
 intermediate data file is required.
 
 | Result in the paper | Output location | Script | Notes |
@@ -98,7 +98,7 @@ intermediate data file is required.
 
 ## Running the Scripts
 
-All scripts must be run from the root directory of the replication package,
+All scripts must be run from the root directory of the replication repository,
 i.e., the directory containing `README.md`, `data/`, `results/`, `scripts/`,
 and `src/`. 
 
@@ -133,7 +133,7 @@ Approximate running times for the individual scripts are provided in
 ## License
 
 Unless otherwise noted, the original code contained in this replication
-package is licensed under the MIT License; see `LICENSE`.
+repository is licensed under the MIT License; see `LICENSE`.
 
-The Corporación Favorita data are not redistributed with this package and
+The Corporación Favorita data are not redistributed with this repository and
 remain subject to the terms and conditions of the original data provider.
