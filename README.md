@@ -1,7 +1,6 @@
-# Replication Package
-
-This package contains the R code and supporting materials required to reproduce
-the numerical results reported in the paper.
+# Feature-Rich, Data-Private: A Sparse Learning Framework for the High-Dimensional Newsvendor
+This directory contains the R code and supporting materials required to reproduce the numerical results reported in the paper `Feature-Rich, Data-Private: A Sparse Learning
+Framework for the High-Dimensional Newsvendor`. This paper develops a privacy-preserving learning method for high-dimensional newsvendor problems, enabling firms to extract useful demand information from large feature sets while protecting sensitive data.
 
 ## Directory Structure
 
