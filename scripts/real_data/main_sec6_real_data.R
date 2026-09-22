@@ -232,16 +232,26 @@ SAA <- log(test_1_mean[4,])
 plot_df_1 <- data.frame( b = b_vec, DPL0ERM = DPL0ERM, L0ERM = L0ERM, csERM = csERM,  SAA = SAA)
 plot_df_long <- plot_df_1 %>% pivot_longer(cols = c("DPL0ERM", "L0ERM","csERM", "SAA"), names_to = "Method",values_to = "Cost") #library(tidyr) 
 method_colors <- c(  "DPL0ERM" = "deepskyblue","L0ERM" = "tomato","csERM" = "#4B3F72", "SAA" = "#2ca02c")
-
+method_shapes <- c(
+  "DPL0ERM" = 16,
+  "L0ERM"   = 17,
+  "csERM"   = 15,
+  "SAA"     = 18
+)
 figure1 <- ggplot(plot_df_long, aes(x = b, y = Cost, color = Method)) +
   geom_line(size = 1, linetype = "solid") +
-  geom_point(size = 2) +
+  geom_point(aes(shape = Method), size = 2) +
   labs(x = "b (Underage cost)", y = "Logarithmic average out-of-sample cost") +
   scale_color_manual(
     values = method_colors,
     breaks = c("DPL0ERM", "L0ERM","csERM", "SAA"),
     labels = c( "DP \u2113<sub>0</sub>-ERM",  "\u2113<sub>0</sub>-ERM",   "cs-ERM", "SAA" )
      ) +
+  scale_shape_manual(
+    values = method_shapes,
+    breaks = c("DPL0ERM", "L0ERM", "csERM", "SAA"),
+    guide = "none"
+  ) +
   scale_x_continuous(breaks = seq(min(plot_df_1$b), max(plot_df_1$b), by = 1)) +    
   theme_classic(base_size = 14) +
   theme(
@@ -252,7 +262,12 @@ figure1 <- ggplot(plot_df_long, aes(x = b, y = Cost, color = Method)) +
     legend.text  = element_markdown(size = 12),  
     legend.position = "right"
   ) +
-  guides(color = guide_legend(title = "Method"))
+  guides(
+    color = guide_legend(
+      title = "Method",
+      override.aes = list(shape = c(16, 17, 15, 18))
+    )
+  )
 
 #figure1 
 
@@ -416,14 +431,25 @@ plot_df2 <- data.frame( n = sample_sizes, L0ERM    = log(test_2_mean[1, ]), DPL0
 long2 <- plot_df2 %>% pivot_longer(-n, names_to = "Method", values_to = "Cost") %>% mutate(Panel = "(b) Setting 2") 
 
 method_colors <- c( "DPL0ERM" = "deepskyblue", "L0ERM"  = "tomato", "csERM"   = "#4B3F72", "SAA" = "#2ca02c" ) 
+method_shapes <- c(
+  "DPL0ERM" = 16,  # circle
+  "L0ERM"   = 17,  # triangle
+  "csERM"   = 15,  # square
+  "SAA"     = 18   # diamond
+)
 figure2 <- ggplot(long2, aes(x = n, y = Cost, color = Method)) +
   geom_line(size = 1) +
-  geom_point(size = 2) +
+  geom_point(aes(shape = Method), size = 2) +
   scale_color_manual(
     values = method_colors,
     breaks = c("DPL0ERM", "L0ERM", "csERM", "SAA"),
     labels = c( "DP \u2113<sub>0</sub>-ERM", "\u2113<sub>0</sub>-ERM", "cs-ERM", "SAA" )
     ) +
+  scale_shape_manual(
+    values = method_shapes,
+    breaks = c("DPL0ERM", "L0ERM", "csERM", "SAA"),
+    guide = "none"
+  ) +
   scale_x_continuous(
     breaks = seq(min(long2$n, na.rm = TRUE),
                  max(long2$n, na.rm = TRUE), by = 50)
@@ -444,7 +470,13 @@ figure2 <- ggplot(long2, aes(x = n, y = Cost, color = Method)) +
     legend.title = element_text(face = "bold", size = 13),
     legend.text  = element_markdown(size = 12),
     legend.position = "right"
-  ) 
+  ) +
+  guides(
+    color = guide_legend(
+      title = "Method",
+      override.aes = list(shape = c(16, 17, 15, 18))
+    )
+  )
 # figure2  
 
 ### Combining figure1 & figure2
@@ -636,10 +668,18 @@ plot_df_3 <- data.frame( s   = s_vec , b5  = test_3_b5_s, b10 = test_3_b10_s, b1
 plot_df_long <- plot_df_3 %>% pivot_longer(cols = c("b5", "b10", "b15"), names_to = "Method", values_to = "Cost")
 method_colors <- c("b5" = "deepskyblue", "b10" = "tomato", "b15" = "#2ca02c")
 baselines <- data.frame( Method = c("b5","b10","b15"), y = c(test_3_b5_bic, test_3_b10_bic, test_3_b15_bic), Series = "BIC baseline" )
-
+method_shapes <- c(
+  "b5"  = 16,   # circle
+  "b10" = 17,   # triangle
+  "b15" = 15    # square
+)
 figure_3 <- ggplot() +
   geom_line( data = plot_df_long, aes(x = s, y = Cost, color = Method), linewidth = 1 ) +
-  geom_point( data = plot_df_long, aes(x = s, y = Cost, color = Method), size = 2 ) +
+  geom_point(
+    data = plot_df_long,
+    aes(x = s, y = Cost, color = Method, shape = Method),
+    size = 2
+  ) +
    
   geom_hline(
     data = baselines,
@@ -654,15 +694,23 @@ figure_3 <- ggplot() +
     breaks = c("b5","b10","b15"),
     labels = c("b = 5","b = 10","b = 15")
   ) +
+  scale_shape_manual(
+    values = method_shapes,
+    breaks = c("b5", "b10", "b15"),
+    guide = "none"
+  ) +
   scale_linetype_manual(
     name   = NULL,
     values = c("BIC baseline" = "dashed"),
-    breaks = "BIC baseline",
-    labels = "BIC baseline"
+    guide = "none"
   ) +
   scale_x_continuous( breaks = s_vec  ) +
    
-  guides( linetype = guide_legend(override.aes = list(color = "black")) ) +
+  guides(
+    color = guide_legend(
+      override.aes = list(shape = c(16, 17, 15))
+    ) 
+  ) +
   
   theme_classic(base_size = 14) +
   theme(
