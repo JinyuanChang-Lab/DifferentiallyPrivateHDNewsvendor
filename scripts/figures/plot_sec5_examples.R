@@ -58,9 +58,9 @@ method_lty <- c(
 )
 
 method_shapes <- c(
-  "L0ERM"   = 16,
+  "L0ERM"   = 15,
   "csERM"   = 16,
-  "ERM"     = 16,
+  "ERM"     = 17,
   "Oracle"  = NA
 )
 
@@ -80,9 +80,9 @@ figure11 <- ggplot(long1, aes(x = p, y = Cost, color = Method)) +
     color = guide_legend(
       title = "Method",
       override.aes = list(
-        linetype = c("solid","solid","solid","longdash"),
-        shape    = c(16,16,16,NA),
-        linewidth = c(1,1,1,0.9)
+        linetype  = c("solid", "solid", "solid", "longdash"),
+        shape     = c(15, 16, 17, NA),
+        linewidth = c(1, 1, 1, 0.9)
       )
     ),
     linetype = "none",
@@ -119,13 +119,30 @@ epsilon_vec <- seq(0.1, 0.9, by = 0.1)
 plot_df2 <- data.frame(epsilon=dat2[,1],revenue= dat2[,2],cost=dat2[,3],profit=dat2[,4])
 long2 <- plot_df2 %>% pivot_longer(-epsilon, names_to = "Method", values_to = "Cost") %>% mutate(Panel = "(b) Setting 2") 
 method_colors <- c("revenue" = "#2ca02c","cost"   = "deepskyblue","profit"= "tomato") 
+method_shapes <- c(
+  "revenue" = 16,   # circle
+  "cost"    = 15,   # square
+  "profit"  = 17    # triangle
+)
+
 figure22 <- ggplot(long2, aes(x = epsilon, y = Cost, color = Method)) +
   geom_line(size = 1) +
-  geom_point(size = 2) +
+  geom_point(aes(shape = Method), size = 2) +
   scale_color_manual(
     values = method_colors,
-    breaks = c(  "revenue", "cost", "profit"),
-    labels =c(  "Revenue", "Cost", "Profit")
+    breaks = c("revenue", "cost", "profit"),
+    labels = c("Revenue", "Cost", "Profit")
+  ) +
+  scale_shape_manual(
+    values = method_shapes,
+    breaks = c("revenue", "cost", "profit"),
+    labels = c("Revenue", "Cost", "Profit")
+  ) +
+  guides(
+    color = guide_legend(
+      override.aes = list(shape = c(16, 15, 17))
+    ),
+    shape = "none"
   ) +
   scale_x_continuous(
     breaks = epsilon_vec,
@@ -141,8 +158,8 @@ figure22 <- ggplot(long2, aes(x = epsilon, y = Cost, color = Method)) +
     plot.title   = element_blank(),
     axis.line.x  = element_line(linewidth = 1.2, color = "black"),
     axis.line.y  = element_line(linewidth = 1.2, color = "black"),
-    axis.title   = element_text(face = "bold"), 
-    axis.title.x = ggtext::element_markdown(face = "plain"), 
+    axis.title   = element_text(face = "bold"),
+    axis.title.x = ggtext::element_markdown(face = "plain"),
     axis.title.y = element_text(face = "bold"),
     axis.text    = element_text(face = "bold"),
     legend.title = element_blank(),
@@ -262,6 +279,7 @@ pt_pchs <- c(cont = 16,            mass_away = 17,        mass_at_q = 15)
 
 ## Baseline slopes colors (keep!)
 ln_cols <- c("-1" = "#555555", "-1/2" = "#CCBB44")
+ln_lty <- c("-1" = "22", "-1/2" = "11")
 
 ## ----------------------------
 ## panel maker
@@ -338,9 +356,9 @@ make_panel <- function(cont_vec, mass_away_vec, mass_at_q_vec, title_text,
   ## ----------------------------
   geom_line(
     data = base_lines,
-    aes(x = logn, y = logy, group = series, color = slope_group),
-    linewidth = 1.3,
-    linetype  = base_dash_lty
+    aes(x = logn, y = logy, group = series,
+        color = slope_group, linetype = slope_group),
+    linewidth = 1.3
   ) +
     scale_color_manual(
       values = ln_cols,
@@ -348,11 +366,19 @@ make_panel <- function(cont_vec, mass_away_vec, mass_at_q_vec, title_text,
       breaks = c("-1", "-1/2"),
       labels = c("-1", "-1/2")
     ) +
+    scale_linetype_manual(
+      values = ln_lty,
+      breaks = c("-1", "-1/2"),
+      guide = "none"
+    ) +
     guides(
       color = guide_legend(
         order = 1,
-        keywidth = base_dash_key_width,                          
-        override.aes = list(linetype = base_dash_lty, linewidth = 1.3)
+        keywidth = base_dash_key_width,
+        override.aes = list(
+          linetype = c("22", "11"),
+          linewidth = 1.3
+        )
       )
     ) +
     
