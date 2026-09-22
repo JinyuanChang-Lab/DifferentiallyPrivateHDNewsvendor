@@ -183,35 +183,82 @@ nonsmooth_U2 <- sqrt(colSums((out_standard_U_2$beta_seq_st - beta_true) ^ 2)) / 
 
 
 ################################################################################
-################################# 3. comparison figure  ######################## 
+################################# 3. comparison figure #########################
 ################################################################################
 
 
+## Color mapping and order
+color_order <- c(
+  'Smoothed (learning rate = 2)',
+  'Standard (learning rate = 2)',
+  'Standard (learning rate = 0.5)'
+)
 
-## Color mapping and order 
-color_order  <- c('Smoothed (learning rate = 2)', 'Standard (learning rate = 2)', 'Standard (learning rate = 0.5)')
-color_values <- c('Smoothed (learning rate = 2)'   = '#4B3F72',  'Standard (learning rate = 2)'   = 'tomato',  'Standard (learning rate = 0.5)' = 'deepskyblue')
+color_values <- c(
+  'Smoothed (learning rate = 2)'       = '#4B3F72',
+  'Standard (learning rate = 2)'       = 'tomato',
+  'Standard (learning rate = 0.5)'     = 'deepskyblue'
+)
 
-## Build data for the two panels  
+## Line type mapping for grayscale printing
+linetype_values <- c(
+  'Smoothed (learning rate = 2)'       = 'solid',
+  'Standard (learning rate = 2)'       = '11',
+  'Standard (learning rate = 0.5)'     = '33'
+)
+
+## Build data for the two panels
 niter <- 1:(T + 1)
+
 # Panel 1: x ~ N(0,1)
 G_combined_data <- rbind(
-  data.frame(iteration = niter, error = as.vector(log(smooth_G[niter])), type = 'Smoothed (learning rate = 2)'),
-  data.frame(iteration = niter, error = as.vector(log(nonsmooth_G1[niter])), type = 'Standard (learning rate = 2)'),
-  data.frame(iteration = niter, error = as.vector(log(nonsmooth_G2[niter])), type = 'Standard (learning rate = 0.5)')
+  data.frame(
+    iteration = niter,
+    error = as.vector(log(smooth_G[niter])),
+    type = 'Smoothed (learning rate = 2)'
+  ),
+  data.frame(
+    iteration = niter,
+    error = as.vector(log(nonsmooth_G1[niter])),
+    type = 'Standard (learning rate = 2)'
+  ),
+  data.frame(
+    iteration = niter,
+    error = as.vector(log(nonsmooth_G2[niter])),
+    type = 'Standard (learning rate = 0.5)'
+  )
 )
-G_combined_data_sub <- G_combined_data %>% filter(iteration >= 50 & iteration <= 80) # subplot
 
+G_combined_data_sub <- G_combined_data %>%
+  filter(iteration >= 50 & iteration <= 80)
+
+
+# Panel 2: x ~ U[-2,2]
 U_combined_data <- rbind(
-  data.frame(iteration = niter, error = as.vector(log(smooth_U[niter])), type = 'Smoothed (learning rate = 2)'),
-  data.frame(iteration = niter, error = as.vector(log(nonsmooth_U1[niter])), type = 'Standard (learning rate = 2)'),
-  data.frame(iteration = niter, error = as.vector(log(nonsmooth_U2[niter])), type = 'Standard (learning rate = 0.5)')
+  data.frame(
+    iteration = niter,
+    error = as.vector(log(smooth_U[niter])),
+    type = 'Smoothed (learning rate = 2)'
+  ),
+  data.frame(
+    iteration = niter,
+    error = as.vector(log(nonsmooth_U1[niter])),
+    type = 'Standard (learning rate = 2)'
+  ),
+  data.frame(
+    iteration = niter,
+    error = as.vector(log(nonsmooth_U2[niter])),
+    type = 'Standard (learning rate = 0.5)'
+  )
 )
-U_combined_data_sub <- U_combined_data %>% filter(iteration >= 35 & iteration <= 75) # subplot
 
-## Two-level theme function 
+U_combined_data_sub <- U_combined_data %>%
+  filter(iteration >= 35 & iteration <= 75)
+
+
+## Two-level theme function
 theme_comb <- function(a){
-  if(a==1){
+  if(a == 1){
     theme(
       text = element_text(size = 14, face = "bold"),
       axis.title = element_text(size = 16),
@@ -219,9 +266,13 @@ theme_comb <- function(a){
       panel.grid = element_blank(),
       panel.border = element_blank(),
       axis.line = element_line(color = "black", size = 1),
-      plot.title = element_text(hjust = 0.5, size = 18, face = "bold")
+      plot.title = element_text(
+        hjust = 0.5,
+        size = 18,
+        face = "bold"
+      )
     )
-  }else{
+  } else {
     theme(
       legend.position = "none",
       text = element_text(size = 10),
@@ -233,60 +284,231 @@ theme_comb <- function(a){
   }
 }
 
+
 ## Legend title expression
-legend_title_expr <- expression(frac(bold(b), bold(b) ~ bold("+") ~ bold(h)) ~ bold("=") ~ bold("0.7"))
+legend_title_expr <- expression(
+  frac(bold(b), bold(b) ~ bold("+") ~ bold(h)) ~ bold("=") ~ bold("0.7")
+)
+
 line_size_main <- 0.8
 
-## Panel 1 main plot + inset
-main_plot_1 <- ggplot(G_combined_data, aes(x = iteration, y = error, color = type)) +
-  geom_line(size = line_size_main) +
-  labs(x = 'Number of iterations', y = 'Estimation error', title = expression(x %~% N(0, 1))) +
-  scale_color_manual(name = legend_title_expr, values = color_values,
-                     breaks = color_order, limits = color_order) +
-  theme_minimal() + theme_comb(1)
 
-G_inset_plot <- ggplot(G_combined_data_sub, aes(x = iteration, y = error, color = type)) +
+## Panel 1 main plot + inset
+main_plot_1 <- ggplot(
+  G_combined_data,
+  aes(
+    x = iteration,
+    y = error,
+    color = type,
+    linetype = type
+  )
+) +
+  geom_line(size = line_size_main) +
+  labs(
+    x = 'Number of iterations',
+    y = 'Estimation error',
+    title = expression(x %~% N(0, 1))
+  ) +
+  scale_color_manual(
+    name = legend_title_expr,
+    values = color_values,
+    breaks = color_order,
+    limits = color_order
+  ) +
+  scale_linetype_manual(
+    name = legend_title_expr,
+    values = linetype_values,
+    breaks = color_order,
+    limits = color_order
+  ) +
+  theme_minimal() +
+  theme_comb(1)
+
+
+G_inset_plot <- ggplot(
+  G_combined_data_sub,
+  aes(
+    x = iteration,
+    y = error,
+    color = type,
+    linetype = type
+  )
+) +
   geom_line(size = 1) +
-  labs(x = 'Number of iterations', y = expression('log relative'~L[2]~'-error')) +
-  scale_color_manual(values = color_values, breaks = color_order, limits = color_order) +
-  theme_void() + theme_comb(2)
+  labs(
+    x = 'Number of iterations',
+    y = expression('log relative'~L[2]~'-error')
+  ) +
+  scale_color_manual(
+    values = color_values,
+    breaks = color_order,
+    limits = color_order
+  ) +
+  scale_linetype_manual(
+    values = linetype_values,
+    breaks = color_order,
+    limits = color_order
+  ) +
+  theme_void() +
+  theme_comb(2)
+
 
 main_plot_1 <- main_plot_1 +
-  annotation_custom(ggplotGrob(G_inset_plot), xmin = 40, xmax = 90, ymin = -2.1, ymax = -0.4) +
-  annotation_custom(rectGrob(gp = gpar(lwd = 1, col = "black", lty = 2, fill = NA)),
-                    xmin = 50, xmax = 80, ymin = -2.9, ymax = -2.6) +
-  annotate("segment", x = 60, y = -2.4, xend = 62, yend = -2.2,
-           arrow = arrow(type = "closed", length = unit(0.08, "inches")),
-           size = 0.5, color = "black")
+  annotation_custom(
+    ggplotGrob(G_inset_plot),
+    xmin = 40,
+    xmax = 90,
+    ymin = -2.1,
+    ymax = -0.4
+  ) +
+  annotation_custom(
+    rectGrob(
+      gp = gpar(
+        lwd = 1,
+        col = "black",
+        lty = 2,
+        fill = NA
+      )
+    ),
+    xmin = 50,
+    xmax = 80,
+    ymin = -2.9,
+    ymax = -2.6
+  ) +
+  annotate(
+    "segment",
+    x = 60,
+    y = -2.4,
+    xend = 62,
+    yend = -2.2,
+    arrow = arrow(
+      type = "closed",
+      length = unit(0.08, "inches")
+    ),
+    size = 0.5,
+    color = "black"
+  )
+
 
 ## Panel 2 main plot + inset
-main_plot_2 <- ggplot(U_combined_data, aes(x = iteration, y = error, color = type)) +
+main_plot_2 <- ggplot(
+  U_combined_data,
+  aes(
+    x = iteration,
+    y = error,
+    color = type,
+    linetype = type
+  )
+) +
   geom_line(size = line_size_main) +
-  labs(x = 'Number of iterations', y = 'Estimation error', title = expression(x %~% U * "[-2, 2]")) +
-  scale_color_manual(name = legend_title_expr, values = color_values,
-                     breaks = color_order, limits = color_order) +
-  theme_minimal() + theme_comb(1)
+  labs(
+    x = 'Number of iterations',
+    y = 'Estimation error',
+    title = expression(x %~% U * "[-2, 2]")
+  ) +
+  scale_color_manual(
+    name = legend_title_expr,
+    values = color_values,
+    breaks = color_order,
+    limits = color_order
+  ) +
+  scale_linetype_manual(
+    name = legend_title_expr,
+    values = linetype_values,
+    breaks = color_order,
+    limits = color_order
+  ) +
+  theme_minimal() +
+  theme_comb(1)
 
-U_inset_plot <- ggplot(U_combined_data_sub, aes(x = iteration, y = error, color = type)) +
+
+U_inset_plot <- ggplot(
+  U_combined_data_sub,
+  aes(
+    x = iteration,
+    y = error,
+    color = type,
+    linetype = type
+  )
+) +
   geom_line(size = 1) +
-  labs(x = 'Number of iterations', y = expression('log relative'~L[2]~'-error')) +
-  scale_color_manual(values = color_values, breaks = color_order, limits = color_order) +
-  theme_void() + theme_comb(2)
+  labs(
+    x = 'Number of iterations',
+    y = expression('log relative'~L[2]~'-error')
+  ) +
+  scale_color_manual(
+    values = color_values,
+    breaks = color_order,
+    limits = color_order
+  ) +
+  scale_linetype_manual(
+    values = linetype_values,
+    breaks = color_order,
+    limits = color_order
+  ) +
+  theme_void() +
+  theme_comb(2)
+
 
 main_plot_2 <- main_plot_2 +
-  annotation_custom(ggplotGrob(U_inset_plot), xmin = 40, xmax = 90, ymin = -2.0, ymax = -0.4) +
-  annotation_custom(rectGrob(gp = gpar(lwd = 1, col = "black", lty = 2, fill = NA)),
-                    xmin = 35, xmax = 75, ymin = -2.7, ymax = -2.3) +
-  annotate("segment", x = 45, y = -2.2, xend = 47, yend = -2.0,
-           arrow = arrow(type = "closed", length = unit(0.08, "inches")),
-           size = 0.5, color = "black")
+  annotation_custom(
+    ggplotGrob(U_inset_plot),
+    xmin = 40,
+    xmax = 90,
+    ymin = -2.0,
+    ymax = -0.4
+  ) +
+  annotation_custom(
+    rectGrob(
+      gp = gpar(
+        lwd = 1,
+        col = "black",
+        lty = 2,
+        fill = NA
+      )
+    ),
+    xmin = 35,
+    xmax = 75,
+    ymin = -2.7,
+    ymax = -2.3
+  ) +
+  annotate(
+    "segment",
+    x = 45,
+    y = -2.2,
+    xend = 47,
+    yend = -2.0,
+    arrow = arrow(
+      type = "closed",
+      length = unit(0.08, "inches")
+    ),
+    size = 0.5,
+    color = "black"
+  )
 
-## Final combined figure (two panels side by side; shared legend)
-final_plot_07 <- (main_plot_1 | main_plot_2) + plot_layout(guides = "collect")
+
+## Final combined figure
+final_plot_07 <- (main_plot_1 | main_plot_2) +
+  plot_layout(guides = "collect")
+
 #print(final_plot_07)
+
 
 ## Save the results
 here::i_am("scripts/simulations/main_sec2_iteration.R")
-figure_file <- here::here( "results", "figures", "iteration.pdf" )
-ggsave(filename = figure_file, plot = final_plot_07, width = 14, height = 4, units = "in", dpi = 300)
+
+figure_file <- here::here(
+  "results",
+  "figures",
+  "iteration.pdf"
+)
+
+ggsave(
+  filename = figure_file,
+  plot = final_plot_07,
+  width = 14,
+  height = 4,
+  units = "in",
+  dpi = 300
+)
  
